@@ -6,18 +6,11 @@ const Cart = (props) => {
     <div className="cart-container">
       <div className="cart">
         <h2>Your Cart</h2>
-        {props.cart.items.map((element) => (
-          <CartItem
-            changeQuantity={props.changeQuantity}
-            removeFromCart={props.removeFromCart}
-            key={element.cart_id}
-            data={element}
-          />
-        ))}
+        {/*.map goes here */}
       </div>
       <div className="total">
-        Your total: ${props.cart.total}
-        <button onClick={props.checkout}>Checkout</button>
+        Your total:
+        <button>Checkout</button>
       </div>
     </div>
   )
