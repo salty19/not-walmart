@@ -1,68 +1,77 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Not Walmart
 
-## Available Scripts
+This is an application built for demonstrating principles of React and Node.js using Express.
 
-In the project directory, you can run:
+## Working example
 
-### `yarn start`
+https://not-walmart.herokuapp.com/
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Application plan
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+A good plan is essential to a successful app. Here you will find wireframes, a component tree (featuring state, props, and methods for each component), and planned out endpoints for the back end.
 
-### `yarn test`
+## Steps to complete
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Back end (Express)
 
-### `yarn build`
+According to our plan we need endpoints that do the following:
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- GET `/api/products` | `getAllProducts`
+  - Serve up the array of products stored in the data.json file.
+- GET `/api/cart` | `getCart`
+  - Serve up an object to be stored in the `cartController.js` file. The object should contain a `total` property (number) and a `items` property (array of objects).
+  - Each item in the `cart.items` array should have `id`, `cart_id`, `name`, `image`, `price`, and `quantity` properties.
+- POST `/api/cart` | `addToCart`
+  - Add a product to our cart and serve the updated cart object
+  - It requires that the body have `product_id` and `quantity` properties.
+  - We should first check if the product is already in our `cart.items` array. If it is, we should just update the quantity.
+  - If the product is not currently in our array, we should use the `product_id` to find the corresponding product, add a `cart_id` and `quantity` property to it and push it to our `cart.items` array.
+  - We then need to update the total property on the cart and send the entire `cart` object.
+- PUT `/api/cart/cart_id` | `changeQuantity`
+  - Change the quantity of a specified product in our cart.
+  - Requires a `cart_id` on params and a `action` query (must be `'up'` or `'down'`)
+  - Find the corresponding item in our `cart.items` array and modify the quantity accordingly
+  - If the quantity would drop to 0, we should remove the item.
+  - Calculate the updated `total` property
+  - Serve up the updated `cart` object
+- DELETE `/api/cart/cart_id` | `removeFromCart`
+  - Remove a specified product from our cart
+  - Requires a `cart_id` on params
+  - Use that `cart_id` to find the correct item and remove it from the `cart.items` array
+  - Calculate the updated `total` property
+  - Serve up the updated `cart` object
+- DELETE `/api/cart` | `checkout`
+  - Reset the `cart` object to its starting values
+  - Serve up updated `cart` object
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+Once that functionality is intact, we should test all of it using Postman.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Front end (React)
 
-### `yarn eject`
+We need the following components
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+- Header (function)
+  - Just displays header
+- Display (class)
+  - Our main logic component
+  - state should include: products (array) and cart (object: total (number), items (array))
+  - Methods should include: `componentDidMount`, `addToCart`, `changeQuantity`, `removeFromCart`, `checkout`
+    - Each of these should make corresponding network calls to their matching endpoints
+- Products (function)
+  - props should include: `products` (array), `addToCart` (function)
+  - This component will map over our products array and return a `Product` component for each item.
+- Product (class)
+  - props should include `data` (object), `addToCart` (function)
+  - state should include `quantity` (number)
+  - methods should include `changeQuantity` and `handleAddToCart`
+  - Should display all info about product
+  - Should allow to select a quantity and add that item to cart.
+- Cart (function)
+  - props should include `cart` (object), `changeQuantity`, `removeFromCart`, `checkout` (functions)
+  - It should contain our cart total and a map of the `items` array in the `cart` prop which will return a `CartItem` for each item
+  - There should also be a button to checkout
+- CartItem (function)
+  - props should include `data` (object), `changeQuantity`, `removeFromCart` (functions)
+  - Should show all info about the product
+  - Should provide buttons to either increase or decrease quantity
+  - Should allow to remove item from cart
