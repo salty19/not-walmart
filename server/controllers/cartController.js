@@ -1,7 +1,7 @@
 const products = require('../data.json')
 
 const cart = { total: 0, items: [] }
-const cart_id = 0
+let cart_id = 0
 
 const updateCartTotal = () => {
   const total = cart.items.reduce((acc, element) => {
@@ -19,7 +19,9 @@ module.exports = {
     //* body should contain product_id and quantity
     const { product_id, quantity } = req.body
 
-    const index = cart.findIndex((element) => element.id === +product.id)
+    console.log(req.body)
+
+    const index = cart.items.findIndex((element) => element.id === +product.id)
 
     if (index === -1) {
       const product = products.find((element) => element.id === +product_id)
@@ -31,7 +33,7 @@ module.exports = {
       product.quantity = quantity
       product.cart_id = cart_id
 
-      cart.push(product)
+      cart.items.push(product)
 
       cart_id++
     } else {
