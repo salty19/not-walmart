@@ -1,6 +1,7 @@
 const products = require('../data.json')
 
 const cart = { total: 0, items: [] }
+
 let cart_id = 0
 
 const updateCartTotal = () => {
