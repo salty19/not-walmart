@@ -8,7 +8,7 @@ const updateCartTotal = () => {
     return (acc += element.price * element.quantity)
   }, 0)
 
-  cart.total = total
+  cart.total = total.toFixed(2)
 }
 
 module.exports = {
@@ -19,9 +19,7 @@ module.exports = {
     //* body should contain product_id and quantity
     const { product_id, quantity } = req.body
 
-    console.log(req.body)
-
-    const index = cart.items.findIndex((element) => element.id === +product.id)
+    const index = cart.items.findIndex((element) => element.id === +product_id)
 
     if (index === -1) {
       const product = products.find((element) => element.id === +product_id)
@@ -37,7 +35,7 @@ module.exports = {
 
       cart_id++
     } else {
-      cart[index].quantity += quantity
+      cart.items[index].quantity += quantity
     }
 
     updateCartTotal()
@@ -60,7 +58,11 @@ module.exports = {
     if (action === 'up') {
       cart.items[index].quantity += 1
     } else {
-      cart.items[index].quantity -= 1
+      if (cart.items[index].quantity > 1) {
+        cart.items[index].quantity -= 1
+      } else {
+        cart.items.splice(index)
+      }
     }
 
     updateCartTotal()
