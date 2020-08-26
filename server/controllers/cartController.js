@@ -1,3 +1,5 @@
+const products = require('../data.json')
+
 const cart = { total: 0, items: [] }
 const cart_id = 0
 
@@ -14,19 +16,26 @@ module.exports = {
     res.status(200).send(cart)
   },
   addToCart: (req, res) => {
-    //* body should contain id, name, image, price, and quantity
-    const { product } = req.body
+    //* body should contain product_id and quantity
+    const { product_id, quantity } = req.body
 
     const index = cart.findIndex((element) => element.id === +product.id)
 
     if (index === -1) {
+      const product = products.find((element) => element.id === +product_id)
+
+      if (!product) {
+        return res.status(404).send('Invalid product')
+      }
+
+      product.quantity = quantity
       product.cart_id = cart_id
 
       cart.push(product)
 
       cart_id++
     } else {
-      cart[index].quantity += product.quantity
+      cart[index].quantity += quantity
     }
 
     updateCartTotal()
