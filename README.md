@@ -10,6 +10,12 @@ https://not-walmart.herokuapp.com/
 
 A good plan is essential to a successful app. Here you will find wireframes, a component tree (featuring state, props, and methods for each component), and planned out endpoints for the back end.
 
+![Wireframe](images/wireframe.png)
+
+![Component Tree](images/component%20tree.png)
+
+![Endpoints](images/endpoints.png)
+
 ## Steps to complete
 
 ### Back end (Express)
