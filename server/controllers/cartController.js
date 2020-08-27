@@ -6,7 +6,9 @@ let cartId = 0
 const updateCartTotal = () => {
     const total = cart.items.reduce((acc, element) => {
         return acc + element.price * element.quantity
-    })
+    }, 0)
+
+    cart.total = total.toFixed(2)
 }
 
 module.exports = {
@@ -32,11 +34,12 @@ module.exports = {
         cart.items[index].quantity += +quantity 
         }
 
-        const total = cart.items.reduce((acc, element) => {
-            return acc + element.price * element.quantity
-        }, 0)
+        // const total = cart.items.reduce((acc, element) => {
+        //     return acc + element.price * element.quantity
+        // }, 0)
 
-        cart.total = total 
+        // cart.total = total 
+
         updateCartTotal()
         res.status(200).send(cart) 
     },
@@ -66,6 +69,25 @@ module.exports = {
         res.status(200).send(cart) 
     },
 
-    removeFromCart: (req, res) => {},
-    checkout: (req, res) => {},
+    removeFromCart: (req, res) => {
+        const { cart_id } = req.params
+        const index = cart.items.findIndex(element => element.cartId === +cart_id)
+
+        if( index === -1) {
+            return res.status(404).send('Item not in cart')
+        }
+
+        cart.items.splice(index, 1)
+
+        updateCartTotal()
+
+        res.status(200).send(cart)
+    },
+
+    checkout: (req, res) => {
+        cart.total = 0
+        cart.items = []
+        
+        res.status(200).send(cart)
+    },
 }
