@@ -3,6 +3,12 @@ const products = require('../data.json')
 const cart = {total: 0, items: []}
 let cartId = 0
 
+const updateCartTotal = () => {
+    const total = cart.items.reduce((acc, element) => {
+        return acc + element.price * element.quantity
+    })
+}
+
 module.exports = {
     getCart: (req, res) => {
         res.status(200).send(cart)
@@ -31,11 +37,35 @@ module.exports = {
         }, 0)
 
         cart.total = total 
+        updateCartTotal()
+        res.status(200).send(cart) 
+    },
+
+    changeQuantity: (req, res) => {
+        const { cart_id } = req.params
+        const { action } = req.query
+
+        const index = cart.items.findIndex(element => element.cartId === +cart_id) 
+
+        if(index === -1) {
+            return res.status(404).send('Product not in cart')
+        }
+
+        if(action === 'up') {
+            cart.items[index].quantity += 1
+        } else {
+            if (cart.items[index].quantity > 1) {
+                cart.item[index].quantity -= 1
+            } else {
+                cart.items.splice(index, 1)
+            }
+        }
+        
+        updateCarttotal()
 
         res.status(200).send(cart) 
     },
 
-    changeQuantity: (req, res) => {},
     removeFromCart: (req, res) => {},
     checkout: (req, res) => {},
 }
