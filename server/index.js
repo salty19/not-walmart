@@ -11,11 +11,11 @@ app.use(express.json())
 app.get('/api/products', productCtrl.getAllProducts)
 
 //* Car endpoints
-app.get('/api/car', cartCtrl.getCart)
-app.post('api/cart', cartCtrl.addToCart)
+app.get('/api/cart', cartCtrl.getCart)
+app.post('/api/cart', cartCtrl.addToCart)
 app.put('/api/cart/:cart_id', cartCtrl.changeQuantity)
 app.delete('/api/cart/:cart_id', cartCtrl.removeFromCart)
-app.delete('api/cart', cartCtrl.checkout)
+app.delete('/api/cart', cartCtrl.checkout)
 
 
 app.listen(SERVER_PORT, () => 
